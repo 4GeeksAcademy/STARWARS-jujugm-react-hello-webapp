@@ -1,15 +1,38 @@
-import React from "react";
+import React, {useEffect,useContext} from "react";
 import rigoImage from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { Card } from "../component/card";
+import { Context } from "../store/appContext";
 
-export const Home = () => (
-	<div className="text-center mt-5">
-		<h1>Hello Rigo!</h1>
-		<p>
-			<img src={rigoImage} />
-		</p>
-		<a href="#" className="btn btn-success">
-			If you see this green button, bootstrap is working
-		</a>
-	</div>
-);
+export const Home = () => {
+	const {store, actions} = useContext (Context)
+	
+	useEffect(() => {
+		console.log('Ejecutando getInfoPeople');
+		actions.getInfoPeople();
+	}, []);
+	
+	
+	console.log(store.peoples); 
+
+	return (
+        <div className="container">
+            <div className="row">
+                <h2>Characters</h2>
+				{store.peoples.length > 0 ? (
+                    store.peoples.map((person, index) => (
+                        <Card
+                            key={index}
+                            name={person.name}
+                            gender={person.gender}
+                            hair_color={person.hair_color}
+                            eye_color={person.eye_color}
+                        />
+                    ))
+                ) : (
+                    <p>Loading...</p> // Mensaje mientras se cargan los datos
+                )}
+            </div>
+        </div>
+    );
+};
