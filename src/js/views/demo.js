@@ -21,13 +21,13 @@ export const Demo = () => {
 								<span>Link to: {item.title}</span>
 							</Link>
 							{// Conditional render example
-							// Check to see if the background is orange, if so, display the message
-							item.background === "orange" ? (
+							// Check to see if the background is RED, if so, display the message
+							item.background === "RED" ? (
 								<p style={{ color: item.initial }}>
 									Check store/flux.js scroll to the actions to see the code
 								</p>
 							) : null}
-							<button className="btn btn-success" onClick={() => actions.changeColor(index, "orange")}>
+							<button className="btn btn-success" onClick={() => actions.changeColor(index, "RED")}>
 								Change Color
 							</button>
 						</li>
@@ -36,7 +36,7 @@ export const Demo = () => {
 			</ul>
 			<br />
 			<Link to="/">
-				<button className="btn btn-primary">Back home</button>
+				<button className="btn btn-secondary">Back home</button>
 			</Link>
 		</div>
 	);

@@ -1,28 +1,65 @@
-import React from "react";
+import React , {useState, useEffect, useContext} from "react";
+import { Link } from "react-router-dom";
+import { Context } from "../store/appContext";
 
-export const Card = ({name, id, url,hair_color,eye_color,gender}) => {
+export const Card = ({ name, uid, url, hair_color, eye_color, gender }) => {
+    const { store, actions } = useContext(Context);
+    console.log("Props en Card:", { name, uid });
+    // Estado local para controlar si el elemento está marcado como favorito
+    const [like, setLike] = useState(false);
 
-    return (
+    // Sincronizar estado local con el global
+    useEffect(() => {
+        // Verificar si el personaje está en favoritos en el store
+       
+          // Llamar a las acciones para obtener los datos de personas, planetas y naves
+          actions.getInfoPeople();
+          actions.getInfoPlanets();
+          actions.getInfoStarships();
+         [actions];  // Solo se ejecuta una vez cuando el componente se monta
+        
+        const isFavorite = store.favorites.some((fav) => fav.uid === uid);
+        setLike(isFavorite);
+    }, [store.favorites, uid]);
 
-        <>
-        <div className="container">
-        <div className="row col-md-4">
-        <div class="card" style={{width: '18rem'}}>
-      <img src="..." className="card-img-top" alt="..."/>
-      <div className="card-body">
-        <h5 className="card-title">{name}</h5>
-        <p className="card-text">
-          <ul>
-            <li>Gender: {gender}      </li>
-            <li>Hair Color:{hair_color}</li>
-            <li>Eye Color:{eye_color}</li>
+    // Manejar clics en el botón de favorito
+    const handleFavoriteClick = (store) => {
+        if (like) {
+            actions.removeFavorite(uid); // Eliminar de favoritos
+        } else {
+            actions.addFavorite({ uid, name }); // Agregar a favoritos
+        }
+        // Cambiar el estado local (se sincronizará en el próximo render)
+        setLike(!like);
+    };
+
+  return (
+    <div className="col-md-4 mb-4">
+      <div className="card" style={{ width: "18rem" }}>
+        <img src="https://i.pinimg.com/originals/19/e8/2e/19e82e29511dc9738bbdbe0968b79448.gif" className="card-img-top" alt="..." />
+        <div className="card-body">
+          <h5 className="card-title">{name}</h5>
+          <div className="card-text">
+            <ul>
+              <li>
+                <strong>Gender:</strong> {gender}
+              </li>
+              <li>
+                <strong>Hair Color:</strong> {hair_color}
+              </li>
+              <li>
+                <strong>Eye Color:</strong> {eye_color}
+              </li>
             </ul>
-        </p>
-        <a href="#" class="btn btn-primary">Learn More!</a>
+          </div>
+          <Link className="btn btn-primary" to={`/cardinfo/people/${uid}`}>
+            Learn More!
+          </Link>
+          <button className="btn btn-light" onClick={handleFavoriteClick}>
+            {like ? "Remove from Favorites ❤️" : "Add to Favorites 🤍"}
+          </button>
+        </div>
       </div>
     </div>
-        </div>
-        </div>
-        
-    </>
-    )};
+  );
+};

@@ -6,6 +6,7 @@ import { Home } from "./views/home";
 import { Demo } from "./views/demo";
 import { Favorites } from "./views/favorites";
 import injectContext from "./store/appContext";
+import { CardInfo} from "./views/cardinfo";
 
 import { Navbar } from "./component/navbar";
 import { Footer } from "./component/footer";
@@ -24,6 +25,8 @@ const Layout = () => {
 					<Routes>
 						<Route path="/" element={<Home />} />
 						<Route path="/demo" element={<Demo />} />
+						<Route path="/cardinfo/:type/:uid" element={<CardInfo />} />
+{/* Ruta dinámica para diferentes tipos de tarjetas */}
 						<Route path="/favorites/:theid" element={<Favorites />} />
 						<Route path="*" element={<h1>Not found!</h1>} />
 					</Routes>

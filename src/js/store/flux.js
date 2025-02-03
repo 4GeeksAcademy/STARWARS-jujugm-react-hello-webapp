@@ -1,9 +1,12 @@
+import { addFavorite, removeFavorite } from "../views/favorites";
+
 const getState = ({ getStore, getActions, setStore }) => {
 	return {
 			store: {
-				peoples: [], // Cambiado de cards.peoples a directamente peoples
+				peoples: [],
 				planets: [],
 				starships: [],
+				favorites: [],
 				demo: [
 					{
 						title: "MY FAVORITES",
@@ -41,6 +44,26 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 
 
+
+			addFavorite: (character) => {
+				const { favorites } = getStore(); // Access favorites directly from getStore()
+				const isAlreadyFavorite = favorites.some((fav) => fav.uid === character.uid);
+			
+				if (!isAlreadyFavorite) {
+					setStore({ favorites: [...getStore().favorites, character] }); // Use getStore().favorites here
+					console.log("Favoritos después de agregar:", getStore().favorites); // Check after adding
+				} else {
+					console.log("El personaje ya está en favoritos.");
+				}
+			},
+			
+			removeFavorite: (characterUid) => {
+				const { favorites } = getStore(); // Access favorites directly from getStore()
+				const updatedFavorites = favorites.filter((fav) => fav.uid !== characterUid);
+			
+				setStore({ favorites: updatedFavorites });
+				console.log("Favoritos después de eliminar:", updatedFavorites);
+			},
 			// a partir de aqui contenido de la API
 
 			async getInfoPeople() {
@@ -78,8 +101,18 @@ const getState = ({ getStore, getActions, setStore }) => {
 				  try {
 					const response = await fetch("https://www.swapi.tech/api/planets", requestOptions);
 					const result = await response.json();
-					setStore({planets: result.results})
-					console.log(result)
+// la info detallada de planetas
+					const detailedPlanets = await Promise.all(
+						result.results.map(async (planetAllInfo) => {
+						
+							const detailResponse = await fetch (`https://www.swapi.tech/api/planets/${planetAllInfo.uid}`, requestOptions);
+							const detailResult = await detailResponse.json();
+					return  detailResult.result.properties;
+					})
+					)
+
+					setStore({planets: detailedPlanets})
+					console.log("Planets Data:",detailedPlanets)
 				  } catch (error) {
 					console.error(error);
 				  }
@@ -94,8 +127,16 @@ const getState = ({ getStore, getActions, setStore }) => {
 				  try {
 					const response = await fetch("https://www.swapi.tech/api/starships", requestOptions);
 					const result = await response.json();
-					setStore({starships: result.results})
-					console.log(result)
+					// info detallada de naves
+					const detailedStarships = await Promise.all (
+						result.results.map(async (starship) =>{
+							const detailResponse= await fetch (`https://www.swapi.tech/api/starships/${starship.uid}`, requestOptions);
+							const detailResult = await detailResponse.json();
+							return detailResult.result.properties;
+						})
+					)
+					setStore({starships: detailedStarships})
+					console.log(detailedStarships)
 				  } catch (error) {
 					console.error(error);
 				  }
