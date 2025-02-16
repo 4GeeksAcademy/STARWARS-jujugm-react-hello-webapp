@@ -66,59 +66,66 @@ const getState = ({ getStore, getActions, setStore }) => {
 			},
 			// a partir de aqui contenido de la API
 
-			async getInfoPeople() {
-				const requestOptions = {
-					method: "GET",
-					redirect: "follow"
-				  };
-				  
-				  try {
-					// fetch inicial para lista de personajes
-					const response = await fetch("https://www.swapi.tech/api/people", requestOptions);
-					const result = await response.json();
-	
-					const detailedPeople = await Promise.all 
-					(
-						result.results.map (async (personAllInfo) => {
-						const detailResponse = await fetch (`https://www.swapi.tech/api/people/${personAllInfo.uid}`, requestOptions); // person.uid proviene del objeto person en el bucle .map (es decir, del array de personajes). Es un identificador único para cada personaje.
-						const detailResult = await detailResponse.json();
-						return detailResult.result.properties;
-				  })
+			getInfoPeople: async () => {
+				try {
+					const response = await fetch("https://www.swapi.tech/api/people/");
+					const data = await response.json();
+			
+					// Obtener detalles de cada personaje
+					const detailedPeople = await Promise.all(
+						data.results.map(async (person) => {
+							const res = await fetch(person.url);
+							const details = await res.json();
+							return {
+								uid: person.uid,
+								name: person.name,
+								gender: details.result.properties.gender,
+								hair_color: details.result.properties.hair_color,
+								eye_color: details.result.properties.eye_color,
+								height: details.result.properties.height,
+								birth_year: details.result.properties.birth_year,
+							};
+						})
 					);
-					setStore({peoples: detailedPeople});
-					console.log(detailedPeople)
-				  } catch (error) {
-					console.error("error al objetener la informacion de personajes");
-				  }
-				  },
-
-			async getInfoPlanets() {
+				 
+					setStore({ peoples: detailedPeople });
+					console.log("✅ Datos completos guardados en store.peoples:", getStore().peoples);
+				} catch (error) {
+					console.error("❌ Error al obtener personajes:", error);
+				}
+			},
+			getInfoPlanets: async () =>  {
 				const requestOptions = {
 					method: "GET",
-					redirect: "follow"
 				  };
 				  
 				  try {
 					const response = await fetch("https://www.swapi.tech/api/planets", requestOptions);
-					const result = await response.json();
-// la info detallada de planetas
+					const data = await response.json();
+					// detalles de planets
 					const detailedPlanets = await Promise.all(
-						result.results.map(async (planetAllInfo) => {
-						
-							const detailResponse = await fetch (`https://www.swapi.tech/api/planets/${planetAllInfo.uid}`, requestOptions);
-							const detailResult = await detailResponse.json();
-					return  detailResult.result.properties;
-					})
-					)
-
-					setStore({planets: detailedPlanets})
-					console.log("Planets Data:",detailedPlanets)
-				  } catch (error) {
+						data.results.map(async(planet) => {
+							const response = await fetch (planet.url);
+							const details =await response.json();
+							return {
+								uid: planet.uid,
+								name: planet.name,
+								population: details.result.properties.population,
+								climate: details.result.properties.climate,
+								terrain: details.result.properties.terrain,
+								diameter:details.result.properties.diameter,
+								rotation_period:details.result.properties.rotation_period,
+								gravity:details.result.properties.gravity,
+							};
+						})
+					);
+					setStore({ planets: detailedPlanets });
+				} catch (error) {
 					console.error(error);
 				  }
 				},
 	
-				async getInfoStarships() {
+				getInfoStarships: async () =>  {
 				const requestOptions = {
 					method: "GET",
 					redirect: "follow"
@@ -126,21 +133,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				  
 				  try {
 					const response = await fetch("https://www.swapi.tech/api/starships", requestOptions);
-					const result = await response.json();
-					// info detallada de naves
-					const detailedStarships = await Promise.all (
-						result.results.map(async (starship) =>{
-							const detailResponse= await fetch (`https://www.swapi.tech/api/starships/${starship.uid}`, requestOptions);
-							const detailResult = await detailResponse.json();
-							return detailResult.result.properties;
-						})
-					)
+					const data = await response.json();
+				// detalles de starships
+				const detailedStarships = await Promise.all (
+					data.results.map(async(starship) => {
+						const response = await fetch (starship.url);
+						const details = await response.json();
+						return {
+							uid: starship.uid,
+							name: starship.name,
+							passengers: details.result.properties.passengers,
+							model: details.result.properties.model,
+							cargo_capacity: details.result.properties.cargo_capacity,
+							manufacturer: details.result.properties.manufacturer,
+							cost_in_credits: details.result.properties.cost_in_credits,
+							crew: details.result.properties.crew,
+						};
+					})
+				);
+
+
+
 					setStore({starships: detailedStarships})
-					console.log(detailedStarships)
+				
 				  } catch (error) {
 					console.error(error);
 				  }
-				}
+				},
 			
 	
 		}

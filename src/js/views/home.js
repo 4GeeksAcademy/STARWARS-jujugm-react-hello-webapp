@@ -8,15 +8,7 @@ import { StarshipsCard } from "../component/starshipscards";
 
 export const Home = () => {
 	const {store, actions} = useContext (Context)
-	
-	useEffect(() => {
-		actions.getInfoPeople();
-        actions.getInfoPlanets();
-        actions.getInfoStarships();
-	}, []);
-	
-	
-	console.log(store.peoples); 
+		
 
 	return (
         <div className="container">
@@ -24,7 +16,7 @@ export const Home = () => {
                 
                 <h2><i className="fa-solid fa-users"></i>  Characters</h2>     
                      <div className="row">
-				{store.peoples.length > 0 ? (
+				{store.planets.length > 0 ? (
                     store.peoples.map((person, index) => (
                         <Card
                             key={index}
@@ -35,9 +27,11 @@ export const Home = () => {
                             eye_color={person.eye_color}
                         />
                     ))
-                ) : (
-                    <p>Loading...</p> // Mensaje mientras se cargan los datos
-                )}
+                ): ( 
+                        <p>Loading...</p> // Mensaje mientras se cargan los datos
+
+                    )
+                }
             </div>
             
                
@@ -47,7 +41,7 @@ export const Home = () => {
                     store.planets.map((planet, index) => (
                         <PlanetsCard
                             key={index}
-                            uid={planet.name}
+                            uid={planet.uid}
                             name={planet.name}
                             population={planet.population}
                             terrain={planet.terrain}
@@ -66,7 +60,7 @@ export const Home = () => {
                         
                         <StarshipsCard
                             key={index}
-                            uid={starship.name}
+                            uid={starship.uid}
                             name={starship.name}
                             passengers={starship.passengers}
                             model={starship.model}

@@ -5,7 +5,7 @@ import { Context } from "../store/appContext";
 
 export const StarshipsCard = ({ name, uid, model, passengers, cargo_capacity }) => {
   const { store, actions } = useContext(Context);
-  console.log("Props en Card:", { name, uid });
+  // console.log("Props en Card:", { name, uid });
   // Estado local para controlar si el elemento está marcado como favorito
   const [like, setLike] = useState(false);
 

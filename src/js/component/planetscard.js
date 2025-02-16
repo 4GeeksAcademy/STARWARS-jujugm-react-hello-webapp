@@ -3,8 +3,9 @@ import { Link } from "react-router-dom";
 import { Context } from "../store/appContext";
 
 export const PlanetsCard = ({ name, uid, terrain, population, climate }) => {
-  const { store, actions } = useContext(Context);
-  console.log("Props en Card:", { name, uid });
+    console.log("🔍 UID en la Card:", uid);
+    const { store, actions } = useContext(Context);
+  // console.log("Props en Card:", { name, uid });
   // Estado local para controlar si el elemento está marcado como favorito
   const [like, setLike] = useState(false);
 
@@ -24,6 +25,7 @@ export const PlanetsCard = ({ name, uid, terrain, population, climate }) => {
       }
       // Cambiar el estado local (se sincronizará en el próximo render)
       setLike(!like);
+    
   };
   
   return (
@@ -34,16 +36,20 @@ export const PlanetsCard = ({ name, uid, terrain, population, climate }) => {
         <div className="card" style={{ width: '18rem' }}>
           <img src="https://i.redd.it/908duc8ac0861.gif" className="card-img-top" alt="..." />
           <div className="card-body">
+           
             <h5 className="card-title">{name}</h5>
             <div className="card-text">
               <ul>
                 <li><strong>Terrain:</strong> {terrain}      </li>
                 <li><strong>Population:</strong>{population}</li>
                 <li><strong>Climate:</strong>{climate}</li>
+                
               </ul>
             </div>
+
             <Link className="btn btn-primary" to={`/cardinfo/planets/${uid}`}>
             Learn More!
+            
           </Link>
           <button className="btn btn-light" onClick={handleFavoriteClick}>
             {like ? "Remove from Favorites ❤️" : "Add to Favorites 🤍"}

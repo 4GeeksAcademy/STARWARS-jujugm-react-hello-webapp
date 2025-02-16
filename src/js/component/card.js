@@ -13,10 +13,6 @@ export const Card = ({ name, uid, url, hair_color, eye_color, gender }) => {
         // Verificar si el personaje está en favoritos en el store
        
           // Llamar a las acciones para obtener los datos de personas, planetas y naves
-          actions.getInfoPeople();
-          actions.getInfoPlanets();
-          actions.getInfoStarships();
-         [actions];  // Solo se ejecuta una vez cuando el componente se monta
         
         const isFavorite = store.favorites.some((fav) => fav.uid === uid);
         setLike(isFavorite);
@@ -40,19 +36,13 @@ export const Card = ({ name, uid, url, hair_color, eye_color, gender }) => {
         <div className="card-body">
           <h5 className="card-title">{name}</h5>
           <div className="card-text">
-            <ul>
-              <li>
-                <strong>Gender:</strong> {gender}
-              </li>
-              <li>
-                <strong>Hair Color:</strong> {hair_color}
-              </li>
-              <li>
-                <strong>Eye Color:</strong> {eye_color}
-              </li>
-            </ul>
+          <ul>
+                            <li><strong>Gender:</strong> {gender || "Unknown"}</li>
+                            <li><strong>Hair Color:</strong> {hair_color || "Unknown"}</li>
+                            <li><strong>Eye Color:</strong> {eye_color || "Unknown"}</li>
+                        </ul>
           </div>
-          <Link className="btn btn-primary" to={`/cardinfo/people/${uid}`}>
+          <Link className="btn btn-primary" to={`/cardinfo/people/${uid + 1}`}>
             Learn More!
           </Link>
           <button className="btn btn-light" onClick={handleFavoriteClick}>

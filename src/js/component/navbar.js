@@ -17,7 +17,7 @@ export const Navbar = () => {
 {/* Mapear taskList para que se generen nuevos li uno debajo de otro */}
 
 					
-			<div class="btn-group">
+			<div className="btn-group">
   <button className="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"  aria-expanded="false">
     Your Favorites  ({store.favorites.length})
 	</button>

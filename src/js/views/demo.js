@@ -18,18 +18,9 @@ export const Demo = () => {
 							className="list-group-item d-flex justify-content-between"
 							style={{ background: item.background }}>
 							<Link to={"/favorites/" + index}>
-								<span>Link to: {item.title}</span>
+								<button><span>Link to: {item.title}</span></button>
 							</Link>
-							{// Conditional render example
-							// Check to see if the background is RED, if so, display the message
-							item.background === "RED" ? (
-								<p style={{ color: item.initial }}>
-									Check store/flux.js scroll to the actions to see the code
-								</p>
-							) : null}
-							<button className="btn btn-success" onClick={() => actions.changeColor(index, "RED")}>
-								Change Color
-							</button>
+			
 						</li>
 					);
 				})}
